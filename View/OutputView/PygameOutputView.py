@@ -1,4 +1,6 @@
+import time
 import pygame
+import threading
 
 from View.OutputView.OutputView import OutputView
 
@@ -17,6 +19,7 @@ class PygameOutputView(OutputView):
         pygame.display.set_caption('Snake')
         board_size = board_size * 2 + 1
         self.gameDisplay = pygame.display.set_mode((board_size * FACTOR, board_size * FACTOR))
+        threading.Thread(target=self.handle_events, daemon=True).start()
 
     def show_board(self, board):
         self.gameDisplay.fill(WHITE)
@@ -30,6 +33,14 @@ class PygameOutputView(OutputView):
     @staticmethod
     def map_board_to_screen(position, size):
         return (position[0] + size) * FACTOR + border_size / 2, (size - position[1]) * FACTOR + border_size / 2
+
+    @staticmethod
+    def handle_events():
+        while True:
+            time.sleep(1)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
     def send_message(self, message):
         print(message)
