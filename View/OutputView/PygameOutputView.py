@@ -3,7 +3,8 @@ import pygame
 from View.OutputView.OutputView import OutputView
 
 FACTOR = 50
-RECT_SIZE = (FACTOR, FACTOR)
+border_size = FACTOR / 10
+RECT_SIZE = (FACTOR - border_size, FACTOR - border_size)
 SURFACE = pygame.Surface((FACTOR, FACTOR))
 RED = pygame.Color(255, 0, 0)
 GREEN = pygame.Color(0, 255, 0)
@@ -28,7 +29,7 @@ class PygameOutputView(OutputView):
 
     @staticmethod
     def map_board_to_screen(position, size):
-        return (position[0] + size) * FACTOR, (size - position[1]) * FACTOR
+        return (position[0] + size) * FACTOR + border_size / 2, (size - position[1]) * FACTOR + border_size / 2
 
     def send_message(self, message):
         print(message)
