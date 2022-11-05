@@ -16,7 +16,7 @@ class ConsoleOutputView(OutputView):
     def show_board(self, board):
         for j in range(board.size, -board.size - 1, -1):
             for i in range(-board.size, board.size + 1):
-                if (i, j) == board.snake.position[0]:
+                if (i, j) == board.snake.head():
                     square = SNAKE_HEAD[board.snake.direction]
                 elif (i, j) in board.snake.position:
                     square = SNAKE_BODY

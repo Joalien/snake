@@ -6,3 +6,6 @@ class Snake:
         """
         self.position = [position]
         self.direction = direction
+
+    def head(self):
+        return self.position[0]

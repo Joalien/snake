@@ -1,18 +1,16 @@
-import time
-
 import utils
 from Model.Board import Board
 from Model.Direction import Direction
 from Model.Snake import Snake
-from Strategy.SimpleStrategy import SimpleStrategy
+from Strategy.DQN.DQNStrategy import DQNStrategy
 from View.InputView.StrategyInputView import StrategyInputView
 from View.OutputView.PygameOutputView import *
 from View.View import View
+from utils import is_illegal_move, losing_next_position
 
 
-def run():
-    board_size = 5
-    strategy = SimpleStrategy()
+def run(board_size=8):
+    strategy = DQNStrategy()
     view = View(StrategyInputView(strategy), PygameOutputView(board_size))
 
     while True:
@@ -24,13 +22,17 @@ def run():
         view.send_message(score)
 
 
-def play_a_game(board, view):
+def play_a_game(board, view, delay=0.05):
     while True:
         view.show_board(board)
         next_direction = get_next_legal_move(board, view)
         next_position = compute_next_position(board.snake, next_direction.value)
         if losing_next_position(board, next_position):
             view.send_message("You lose!")
+            # TODO Can be improve
+            rotate(board.snake, next_direction)
+            move_forward(board.snake, next_position)
+            view.show_board(board)
             return len(board.snake.position)
 
         rotate(board.snake, next_direction)
@@ -41,10 +43,13 @@ def play_a_game(board, view):
         else:
             remove_last_position(board.snake)
 
-        time.sleep(0.05)
+        time.sleep(delay)
 
 
 def get_next_legal_move(board, view):
+    """
+    :return: one value of the enum Direction
+    """
     next_direction = view.get_input(board)
     while is_illegal_move(board.snake, next_direction):
         view.send_message('invalid move')
@@ -61,28 +66,11 @@ def move_forward(snake, next_position):
 
 
 def compute_next_position(snake, next_direction):
-    return utils.add_tuple(snake.position[0], next_direction)
+    return utils.add_tuple(snake.head(), next_direction)
 
 
 def rotate(snake, direction):
     snake.direction = direction
-
-
-def is_illegal_move(snake, direction):
-    return utils.add_tuple(snake.direction.value, direction.value) == (0, 0)
-
-
-def is_position_outside_board(board, position):
-    return abs(position[0]) > board.size or abs(position[1]) > board.size
-
-
-def is_position_inside_snake(snake, position):
-    # Do not include last element
-    return position in snake.position[:-1]
-
-
-def losing_next_position(board, position):
-    return is_position_inside_snake(board.snake, position) or is_position_outside_board(board, position)
 
 
 def lose():

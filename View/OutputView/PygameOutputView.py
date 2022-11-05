@@ -23,8 +23,8 @@ class PygameOutputView(OutputView):
 
     def show_board(self, board):
         self.gameDisplay.fill(WHITE)
-        self.draw_rect(RED, board.food.position, board.size)
         [self.draw_rect(GREEN, p, board.size) for p in board.snake.position]
+        self.draw_rect(RED, board.food.position, board.size)
         pygame.display.update()
 
     def draw_rect(self, color, position, size):

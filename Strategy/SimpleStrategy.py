@@ -8,7 +8,7 @@ from Strategy.Strategy import Strategy
 class SimpleStrategy(Strategy):
     def chose_next_move(self, board):
         food_position = board.food.position
-        head_position = board.snake.position[0]
+        head_position = board.snake.head()
         distance = utils.distance_tuple(food_position, head_position)
         next_position = self.compute_next_position(board.snake, board.snake.direction)
         if utils.distance_tuple(food_position, next_position) <= distance:
@@ -18,4 +18,4 @@ class SimpleStrategy(Strategy):
 
     @staticmethod
     def compute_next_position(snake, next_direction):
-        return utils.add_tuple(snake.position[0], next_direction.value)
+        return utils.add_tuple(snake.head(), next_direction.value)
