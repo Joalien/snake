@@ -1,3 +1,4 @@
+from Model.Board import Board
 from Model.Direction import Direction
 from View.OutputView.OutputView import OutputView
 
@@ -13,10 +14,10 @@ EMPTY_SQUARE = '. '
 
 
 class ConsoleOutputView(OutputView):
-    def show_board(self, board):
+    def show_board(self, board: Board):
         for j in range(board.size, -board.size - 1, -1):
             for i in range(-board.size, board.size + 1):
-                if (i, j) == board.snake.head():
+                if (i, j) == board.snake.head:
                     square = SNAKE_HEAD[board.snake.direction]
                 elif (i, j) in board.snake.position:
                     square = SNAKE_BODY
@@ -27,5 +28,5 @@ class ConsoleOutputView(OutputView):
                 print(square, end='')
             print()
 
-    def send_message(self, message):
+    def send_message(self, message: int | str):
         print(message)

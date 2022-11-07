@@ -1,7 +1,7 @@
 from Model.Direction import Direction
 from View.InputView.InputView import InputView
 
-KEY_MAPPING = {
+KEY_MAPPING: dict[str, Direction] = {
     'z': Direction.UP,
     'd': Direction.RIGHT,
     's': Direction.DOWN,
@@ -10,7 +10,7 @@ KEY_MAPPING = {
 
 
 class KeyboardInputView(InputView):
-    def get_input(self, _):
+    def get_input(self, _) -> Direction:
         next_direction = input()
         while next_direction not in KEY_MAPPING:
             next_direction = input()

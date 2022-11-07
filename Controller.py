@@ -1,38 +1,37 @@
 import utils
-from Model.Board import Board
 from Model.Direction import Direction
 from Model.Snake import Snake
 from Strategy.DQN.DQNStrategy import DQNStrategy
+from View.InputView.InputView import InputView
 from View.InputView.StrategyInputView import StrategyInputView
 from View.OutputView.PygameOutputView import *
-from View.View import View
 from utils import is_illegal_move, losing_next_position
 
 
 def run(board_size=8):
     strategy = DQNStrategy()
-    view = View(StrategyInputView(strategy), PygameOutputView(board_size))
+    input_view, output_view = StrategyInputView(strategy), PygameOutputView(board_size)
 
     while True:
         board = Board(board_size, Snake((0, 0), Direction.UP))
         board.spawn_food()
 
-        score = play_a_game(board, view)
+        score: int | str = play_a_game(board, input_view, output_view)
 
-        view.send_message(score)
+        output_view.send_message(score)
 
 
-def play_a_game(board, view, delay=0.05):
+def play_a_game(board: Board, input_view: InputView, output_view: OutputView, delay=0.05) -> int:
     while True:
-        view.show_board(board)
-        next_direction = get_next_legal_move(board, view)
+        output_view.show_board(board)
+        next_direction = get_next_legal_move(board, input_view)
         next_position = compute_next_position(board.snake, next_direction.value)
         if losing_next_position(board, next_position):
-            view.send_message("You lose!")
+            output_view.send_message("You lose!")
             # TODO Can be improve
             rotate(board.snake, next_direction)
             move_forward(board.snake, next_position)
-            view.show_board(board)
+            output_view.show_board(board)
             return len(board.snake.position)
 
         rotate(board.snake, next_direction)
@@ -46,30 +45,29 @@ def play_a_game(board, view, delay=0.05):
         time.sleep(delay)
 
 
-def get_next_legal_move(board, view):
+def get_next_legal_move(board: Board, view: InputView) -> Direction:
     """
     :return: one value of the enum Direction
     """
     next_direction = view.get_input(board)
     while is_illegal_move(board.snake, next_direction):
-        view.send_message('invalid move')
         next_direction = view.get_input(board)
     return next_direction
 
 
-def remove_last_position(snake):
+def remove_last_position(snake: Snake):
     snake.position.pop()
 
 
-def move_forward(snake, next_position):
+def move_forward(snake: Snake, next_position: Tuple[int, int]):
     snake.position.insert(0, next_position)
 
 
-def compute_next_position(snake, next_direction):
-    return utils.add_tuple(snake.head(), next_direction)
+def compute_next_position(snake: Snake, next_direction: Tuple[int, int]) -> Tuple[int, int]:
+    return utils.add_tuple(snake.head, next_direction)
 
 
-def rotate(snake, direction):
+def rotate(snake: Snake, direction: Direction):
     snake.direction = direction
 
 

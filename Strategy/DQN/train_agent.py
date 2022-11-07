@@ -67,7 +67,7 @@ def dqn(n_episodes=1000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.98
 def step(board, next_direction_index):
     done = False
     reward = 0
-    old_distance_to_food = utils.distance_tuple(board.snake.head(), board.food.position)
+    old_distance_to_food = utils.distance_tuple(board.snake.head, board.food.position)
     # next_direction_index [0, 1, 2]
     next_direction = map_action_to_direction(board.snake.direction, next_direction_index)
 

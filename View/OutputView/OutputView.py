@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
 
+from Model.Board import Board
+
 
 class OutputView(ABC):
     @abstractmethod
-    def show_board(self, board):
+    def show_board(self, board: Board):
         pass
 
     @abstractmethod
-    def send_message(self, message):
+    def send_message(self, message: int | str):
         pass

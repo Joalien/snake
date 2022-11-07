@@ -1,10 +1,11 @@
 import random
 
 from Model.Food import Food
+from Model.Snake import Snake
 
 
 class Board:
-    def __init__(self, size, snake):
+    def __init__(self, size: int, snake: Snake):
         self.size = size
         self.snake = snake
         self.food = None
